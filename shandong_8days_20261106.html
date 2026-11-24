@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>台大B78山東8日考察行手帳 ｜ 2026.11.06 - 2026.11.13</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f9f6ee; --card: #ffffff; --border: #383026;
+      --forest: #3d6a49; --forest-bg: #e6f0e9;
+      --sky: #46799c; --sky-bg: #e7f1f7;
+      --calcifer: #db5a3a; --calcifer-bg: #fbeee8;
+      --hay: #d4952c; --hay-bg: #fcf4e4;
+      --text: #2c251e; --muted: #796f63;
+      --shadow: 3px 3px 0px var(--border);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+      background: var(--bg);
+      background-image: radial-gradient(#e8dfcf 1px, transparent 1px);
+      background-size: 20px 20px;
+      color: var(--text); line-height: 1.65; padding: 20px 12px 80px;
+    }
+    .wrap { max-width: 780px; margin: 0 auto; }
+    .top-badge { text-align: center; margin-bottom: 14px; }
+    .top-badge span {
+      background: #f1ebd9; padding: 6px 18px; border-radius: 999px;
+      border: 2px solid var(--border); font-size: 0.88rem; font-weight: 800;
+      box-shadow: 2px 2px 0px var(--border); display: inline-flex; align-items: center; gap: 6px;
+    }
+
+    /* 隱藏 Radio 輸入控制項 (純 CSS 切換，100% 免疫任何 JS 沙盒限制) */
+    input.pure-radio {
+      position: fixed;
+      top: -9999px;
+      left: -9999px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 頂部主導覽列 */
+    .nav {
+      display: flex; justify-content: center; gap: 5px; margin-bottom: 18px;
+      background: #ffffff; padding: 6px; border-radius: 999px;
+      border: 2.5px solid var(--border); box-shadow: var(--shadow); flex-wrap: wrap;
+    }
+    .nav-label {
+      padding: 7px 12px; font-size: 0.85rem; font-weight: 800; color: var(--muted);
+      border-radius: 999px; cursor: pointer; display: inline-block; user-select: none; transition: 0.15s;
+    }
+    .nav-label:hover { background: rgba(0,0,0,0.04); color: var(--text); }
+
+    /* 主導覽切換高亮 */
+    #tab-sched:checked ~ .wrap .nav label[for="tab-sched"],
+    #tab-flight:checked ~ .wrap .nav label[for="tab-flight"],
+    #tab-over:checked ~ .wrap .nav label[for="tab-over"],
+    #tab-menu:checked ~ .wrap .nav label[for="tab-menu"],
+    #tab-hotel:checked ~ .wrap .nav label[for="tab-hotel"],
+    #tab-taishan:checked ~ .wrap .nav label[for="tab-taishan"],
+    #tab-tips:checked ~ .wrap .nav label[for="tab-tips"] {
+      background: var(--calcifer); color: #fff; box-shadow: 1.5px 1.5px 0px var(--border);
+    }
+
+    /* 主區塊顯示控制 */
+    .main-sec { display: none; }
+    #tab-sched:checked ~ .wrap #sec-schedule { display: block; }
+    #tab-flight:checked ~ .wrap #sec-flights { display: block; }
+    #tab-over:checked ~ .wrap #sec-overview { display: block; }
+    #tab-menu:checked ~ .wrap #sec-menu { display: block; }
+    #tab-hotel:checked ~ .wrap #sec-hotels { display: block; }
+    #tab-taishan:checked ~ .wrap #sec-taishan { display: block; }
+    #tab-tips:checked ~ .wrap #sec-tips { display: block; }
+
+    /* 橫向鐵道時間軸 (8天) */
+    .rail-timeline {
+      background: #fff; border: 2.5px solid var(--border); border-radius: 20px;
+      padding: 16px 12px 12px; box-shadow: var(--shadow); margin-bottom: 16px; overflow-x: auto;
+    }
+    .track { display: flex; align-items: center; min-width: 660px; position: relative; padding: 10px 0; }
+    .track-line { position: absolute; top: 25px; left: 16px; right: 16px; height: 4px; background: var(--border); z-index: 1; }
+    .stop { flex: 1; text-align: center; position: relative; z-index: 2; cursor: pointer; display: block; user-select: none; }
+    .dot { width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 3px solid var(--border); margin: 18px auto 6px; }
+    .loco {
+      position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+      background: var(--hay-bg); border: 2px solid var(--border); border-radius: 10px;
+      padding: 2px 6px; font-size: 0.76rem; font-weight: 800; display: none; white-space: nowrap;
+    }
+    .s-date { font-size: 0.8rem; font-weight: 800; display: inline-block; }
+    .s-day { font-size: 0.7rem; color: var(--muted); font-weight: 700; }
+
+    /* 鐵道站點選中樣式 */
+    #day-1-radio:checked ~ .wrap .stop[for="day-1-radio"] .dot,
+    #day-2-radio:checked ~ .wrap .stop[for="day-2-radio"] .dot,
+    #day-3-radio:checked ~ .wrap .stop[for="day-3-radio"] .dot,
+    #day-4-radio:checked ~ .wrap .stop[for="day-4-radio"] .dot,
+    #day-5-radio:checked ~ .wrap .stop[for="day-5-radio"] .dot,
+    #day-6-radio:checked ~ .wrap .stop[for="day-6-radio"] .dot,
+    #day-7-radio:checked ~ .wrap .stop[for="day-7-radio"] .dot,
+    #day-8-radio:checked ~ .wrap .stop[for="day-8-radio"] .dot {
+      background: var(--calcifer); box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--border);
+    }
+    #day-1-radio:checked ~ .wrap .stop[for="day-1-radio"] .loco,
+    #day-2-radio:checked ~ .wrap .stop[for="day-2-radio"] .loco,
+    #day-3-radio:checked ~ .wrap .stop[for="day-3-radio"] .loco,
+    #day-4-radio:checked ~ .wrap .stop[for="day-4-radio"] .loco,
+    #day-5-radio:checked ~ .wrap .stop[for="day-5-radio"] .loco,
+    #day-6-radio:checked ~ .wrap .stop[for="day-6-radio"] .loco,
+    #day-7-radio:checked ~ .wrap .stop[for="day-7-radio"] .loco,
+    #day-8-radio:checked ~ .wrap .stop[for="day-8-radio"] .loco {
+      display: block;
+    }
+    #day-1-radio:checked ~ .wrap .stop[for="day-1-radio"] .s-date,
+    #day-2-radio:checked ~ .wrap .stop[for="day-2-radio"] .s-date,
+    #day-3-radio:checked ~ .wrap .stop[for="day-3-radio"] .s-date,
+    #day-4-radio:checked ~ .wrap .stop[for="day-4-radio"] .s-date,
+    #day-5-radio:checked ~ .wrap .stop[for="day-5-radio"] .s-date,
+    #day-6-radio:checked ~ .wrap .stop[for="day-6-radio"] .s-date,
+    #day-7-radio:checked ~ .wrap .stop[for="day-7-radio"] .s-date,
+    #day-8-radio:checked ~ .wrap .stop[for="day-8-radio"] .s-date {
+      background: var(--calcifer); color: #fff; padding: 2px 6px; border-radius: 6px; border: 1px solid var(--border);
+    }
+
+    /* Stepper 控制列 */
+    .stepper {
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
+      background: #fdfaf4; padding: 8px 12px; border-radius: 14px; border: 2px solid var(--border);
+      box-shadow: 2px 2px 0px var(--border); margin-bottom: 18px;
+    }
+    .btn-step-label {
+      padding: 6px 12px; border-radius: 8px; font-size: 0.84rem; font-weight: 800;
+      border: 1.5px solid var(--border); background: #fff; cursor: pointer; box-shadow: 1px 1px 0px var(--border);
+      user-select: none; display: none; white-space: nowrap;
+    }
+    .day-step-title { font-weight: 900; font-size: 0.9rem; color: var(--forest); display: none; text-align: center; }
+
+    /* 各天專屬 Stepper 狀態顯示 */
+    #day-1-radio:checked ~ .wrap .prev-d1, #day-1-radio:checked ~ .wrap .title-d1, #day-1-radio:checked ~ .wrap .next-d2 { display: inline-block; }
+    #day-2-radio:checked ~ .wrap .prev-d1, #day-2-radio:checked ~ .wrap .title-d2, #day-2-radio:checked ~ .wrap .next-d3 { display: inline-block; }
+    #day-3-radio:checked ~ .wrap .prev-d2, #day-3-radio:checked ~ .wrap .title-d3, #day-3-radio:checked ~ .wrap .next-d4 { display: inline-block; }
+    #day-4-radio:checked ~ .wrap .prev-d3, #day-4-radio:checked ~ .wrap .title-d4, #day-4-radio:checked ~ .wrap .next-d5 { display: inline-block; }
+    #day-5-radio:checked ~ .wrap .prev-d4, #day-5-radio:checked ~ .wrap .title-d5, #day-5-radio:checked ~ .wrap .next-d6 { display: inline-block; }
+    #day-6-radio:checked ~ .wrap .prev-d5, #day-6-radio:checked ~ .wrap .title-d6, #day-6-radio:checked ~ .wrap .next-d7 { display: inline-block; }
+    #day-7-radio:checked ~ .wrap .prev-d6, #day-7-radio:checked ~ .wrap .title-d7, #day-7-radio:checked ~ .wrap .next-d8 { display: inline-block; }
+    #day-8-radio:checked ~ .wrap .prev-d7, #day-8-radio:checked ~ .wrap .title-d8, #day-8-radio:checked ~ .wrap .next-d8 { display: inline-block; }
+
+    /* 每日內容顯示切換 */
+    .day-pane { display: none; }
+    #day-1-radio:checked ~ .wrap #pane-d1 { display: block; }
+    #day-2-radio:checked ~ .wrap #pane-d2 { display: block; }
+    #day-3-radio:checked ~ .wrap #pane-d3 { display: block; }
+    #day-4-radio:checked ~ .wrap #pane-d4 { display: block; }
+    #day-5-radio:checked ~ .wrap #pane-d5 { display: block; }
+    #day-6-radio:checked ~ .wrap #pane-d6 { display: block; }
+    #day-7-radio:checked ~ .wrap #pane-d7 { display: block; }
+    #day-8-radio:checked ~ .wrap #pane-d8 { display: block; }
+
+    /* 卡片與手帳樣式 */
+    .card {
+      background: #fff; border: 2.5px solid var(--border); border-radius: 20px;
+      padding: 20px; box-shadow: var(--shadow); margin-bottom: 18px;
+    }
+    .card h3 { font-size: 1.2rem; font-weight: 900; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .card p { font-size: 0.9rem; color: #403b35; line-height: 1.7; }
+    .tip-box { padding: 9px 12px; border-radius: 10px; font-size: 0.84rem; line-height: 1.6; border: 1.5px solid var(--border); margin-top: 8px; }
+    .tip-green { background: #eaf3ec; color: #1c4826; }
+    .tip-red { background: #faeae6; color: #8f2314; border-color: #8f2314; }
+    .tip-blue { background: #e9f2f8; color: #1e4562; }
+    .tip-gold { background: #fbf3e2; color: #724c08; }
+
+    .banner {
+      background: var(--forest-bg); border: 2.5px solid var(--border); border-radius: 20px;
+      padding: 16px; box-shadow: var(--shadow); margin-bottom: 18px; display: flex; align-items: center; gap: 14px;
+    }
+    .b-icon { width: 56px; height: 56px; border-radius: 16px; background: #fff; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; box-shadow: 2px 2px 0px var(--border); }
+    .b-title h3 { font-size: 0.82rem; font-weight: 900; color: var(--forest); }
+    .b-title h2 { font-size: 1.25rem; font-weight: 900; color: var(--text); line-height: 1.3; }
+    .b-title p { font-size: 0.82rem; color: var(--muted); font-weight: 700; }
+
+    .strat-card { background: #fff; border: 2px solid var(--border); border-radius: 14px; padding: 12px 14px; margin-bottom: 18px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px; }
+    .strat-row { display: flex; align-items: flex-start; gap: 8px; font-size: 0.86rem; }
+    .strat-badge { font-size: 0.74rem; font-weight: 900; padding: 2px 6px; border-radius: 5px; border: 1px solid var(--border); white-space: nowrap; flex-shrink: 0; }
+
+    .v-timeline { position: relative; padding-left: 18px; }
+    .v-line { position: absolute; left: 56px; top: 12px; bottom: 20px; width: 3px; border-left: 3px dashed var(--border); }
+    .t-entry { position: relative; display: flex; gap: 16px; margin-bottom: 12px; align-items: flex-start; }
+    .t-time { width: 44px; flex-shrink: 0; font-size: 0.84rem; font-weight: 900; color: var(--muted); padding-top: 10px; text-align: right; }
+    .t-node { position: absolute; left: 52px; top: 14px; width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 2.5px solid var(--border); z-index: 2; }
+    .s-box { flex: 1; background: #fff; border: 2px solid var(--border); border-radius: 16px; padding: 14px; box-shadow: var(--shadow); }
+    .s-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
+    .badge-k { font-size: 0.72rem; font-weight: 900; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); }
+    .badge-k.flight { background: var(--sky-bg); color: #225170; }
+    .badge-k.spot { background: var(--forest-bg); color: #235232; }
+    .badge-k.food { background: var(--hay-bg); color: #875c12; }
+    .badge-k.train { background: var(--calcifer-bg); color: #9c3319; }
+    .badge-k.hotel { background: #f3e8ff; color: #6b21a8; }
+    .s-title { font-size: 1.02rem; font-weight: 900; }
+    .s-desc { font-size: 0.88rem; color: #3e3831; line-height: 1.65; margin-top: 4px; }
+    .transit-bar { margin: 2px 0 12px 60px; }
+    .transit-pill { background: #fdfaf4; border: 1.5px solid var(--border); border-radius: 999px; padding: 4px 12px; font-size: 0.8rem; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; box-shadow: 1px 1px 0px var(--border); }
+    .link-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .link-btn { display: inline-flex; align-items: center; gap: 4px; padding: 5px 11px; border-radius: 8px; font-size: 0.78rem; font-weight: 800; text-decoration: none; color: var(--text); background: #f1ebd9; border: 1.5px solid var(--border); box-shadow: 1px 1px 0px var(--border); }
+    .tbl { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .tbl th, .tbl td { border: 1.5px solid var(--border); padding: 8px 10px; font-size: 0.84rem; }
+    .tbl th { background: #ede6da; font-weight: 900; }
+    .m-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-bottom: 1.5px dashed #e8dfcf; }
+    .input-box { width: 100%; padding: 10px 14px; border-radius: 12px; border: 2px solid var(--border); font-size: 1.1rem; font-weight: 900; background: #fcf9f2; outline: none; }
+    .route-box { background: #fdfaf4; border: 1.5px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 8px; }
+    .route-box h4 { font-size: 0.92rem; font-weight: 900; color: var(--calcifer); margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- PURE CSS RADIO INPUTS -->
+  <input type="radio" name="main_tab" id="tab-sched" class="pure-radio" checked>
+  <input type="radio" name="main_tab" id="tab-flight" class="pure-radio">
+  <input type="radio" name="main_tab" id="tab-over" class="pure-radio">
+  <input type="radio" name="main_tab" id="tab-taishan" class="pure-radio">
+  <input type="radio" name="main_tab" id="tab-menu" class="pure-radio">
+  <input type="radio" name="main_tab" id="tab-hotel" class="pure-radio">
+  <input type="radio" name="main_tab" id="tab-tips" class="pure-radio">
+
+  <!-- 8天切換 RADIO -->
+  <input type="radio" name="day_tab" id="day-1-radio" class="pure-radio" checked>
+  <input type="radio" name="day_tab" id="day-2-radio" class="pure-radio">
+  <input type="radio" name="day_tab" id="day-3-radio" class="pure-radio">
+  <input type="radio" name="day_tab" id="day-4-radio" class="pure-radio">
+  <input type="radio" name="day_tab" id="day-5-radio" class="pure-radio">
+  <input type="radio" name="day_tab" id="day-6-radio" class="pure-radio">
+  <input type="radio" name="day_tab" id="day-7-radio" class="pure-radio">
+  <input type="radio" name="day_tab" id="day-8-radio" class="pure-radio">
+
+<div class="wrap">
+  <div class="top-badge">
+    <span>⛰️ 台大B78山東8日考察行旅遊手冊 ｜ 2026.11.06 - 2026.11.13</span>
+  </div>
+
+  <!-- 頂部導覽按鈕標籤 -->
+  <div class="nav">
+    <label for="tab-flight" class="nav-label">✈️ 航班集合</label>
+    <label for="tab-over" class="nav-label">🗺️ 總覽</label>
+    <label for="tab-sched" class="nav-label">📅 每日行程</label>
+    <label for="tab-taishan" class="nav-label">⛰️ 泰山攻略</label>
+    <label for="tab-menu" class="nav-label">🍽️ 美饌匯率</label>
+    <label for="tab-hotel" class="nav-label">🏨 住宿飯店</label>
+    <label for="tab-tips" class="nav-label">🧳 行李須知</label>
+  </div>
+
+  <!-- ==================== 1. 航班與集合資訊分頁 ==================== -->
+  <div id="sec-flights" class="main-sec">
+    <div class="card" style="border-left: 6px solid var(--calcifer);">
+      <h3>📢 集合資訊與隨團服務人員</h3>
+      <p>
+        • <strong>集合時間：</strong><strong style="color:var(--calcifer);">2026.11.06 下午 14:30</strong>（起飛前 2.5 小時）<br>
+        • <strong>集合地點：</strong><strong>桃園國際機場 第二航廈 山東航空 22 號櫃台</strong><br>
+        • <strong>隨團服務人員：</strong><strong>林昭伶</strong> ｜ 聯絡電話：<a href="tel:0988285482" style="color:var(--sky); font-weight:800; text-decoration:none;">0988-285482</a>
+      </p>
+      <div class="tip-box tip-red">
+        ⚠️ <strong>機場報到提醒：</strong>桃園機場人潮眾多，旅客應於航班起飛前 2.5 小時向航空公司報到櫃檯辦理完成手續。<strong>山東航空報到櫃檯將於表定起飛時間前 60 分鐘停止受理報到</strong>。請先佩掛好行李牌，由隨團服務人員代辦出境及登機手續。
+      </div>
+    </div>
+
+    <div class="card" style="border-left: 6px solid var(--sky);">
+      <h3>✈️ 山東航空 (Shandong Airlines) 航班時刻表</h3>
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>日期</th>
+            <th>出發地</th>
+            <th>目的地</th>
+            <th>班機代號</th>
+            <th>起飛時間</th>
+            <th>抵達時間</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>11/06 (五)</strong></td>
+            <td>TPE 台北桃園</td>
+            <td>TAO 青島膠東</td>
+            <td><strong>SC4086</strong></td>
+            <td><strong>16:45</strong></td>
+            <td><strong>19:15</strong></td>
+          </tr>
+          <tr>
+            <td><strong>11/13 (五)</strong></td>
+            <td>TAO 青島膠東</td>
+            <td>TPE 台北桃園</td>
+            <td><strong>SC4085</strong></td>
+            <td><strong>13:25</strong></td>
+            <td><strong>15:45</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="tip-box tip-green">🌟 <strong>直飛齊魯大地：</strong>台北桃園直飛青島膠東國際機場，去程晚間抵達入住五星香格里拉，回程午後班機從容賦歸！</div>
+    </div>
+  </div>
+
+  <!-- ==================== 2. 總覽分頁 ==================== -->
+  <div id="sec-overview" class="main-sec">
+    <div class="card" style="border-left: 6px solid var(--forest);">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+        <h3 style="margin-bottom:0;">🗺️ 台大B78山東 8 日考察行全景動線</h3>
+        <span style="font-size:0.78rem; font-weight:800; background:#f1ebd9; padding:2px 8px; border-radius:6px; border:1px solid var(--border);">齊魯文脈・五嶽之首・海濱風情</span>
+      </div>
+      <p style="margin:8px 0 14px; font-size:0.86rem; color:var(--muted);">
+        橫跨青島、濟南、曲阜、泰安四大名城，探索孔子故里、天下第一泉、登頂五嶽獨尊泰山，漫步德式紅瓦綠樹青島老城：
+      </p>
+      <div style="background:#fdfaf4; border:2px solid var(--border); border-radius:16px; padding:16px; box-shadow:2px 2px 0px var(--border);">
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <div style="background:#fff; border:2px solid var(--border); border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">🛫</div>
+          <div style="flex:1;">
+            <strong>Day 1 (11/06)：台北桃園 ➔ 青島膠東 ➔ 啟程探索齊魯大地</strong>
+            <div style="font-size:0.82rem; color:var(--muted); margin-top:2px;">SC4086 (16:45-19:15) 抵達青島 ➔ 住 青島香格里拉酒店</div>
+          </div>
+        </div>
+        <div style="margin:6px 0 6px 19px; padding-left:18px; border-left:3px dashed var(--border); font-size:0.8rem; font-weight:800; color:var(--calcifer);">🚌 前往泉城濟南章丘</div>
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <div style="background:#fff; border:2px solid var(--border); border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">🏮</div>
+          <div style="flex:1;">
+            <strong>Day 2 (11/07)：章丘【明水古城・清照泉城】</strong>
+            <div style="font-size:0.82rem; color:var(--muted); margin-top:2px;">匯聚百脈泉靈動泉水與千年古城底蘊 ➔ 古城內藥膳風味餐 ➔ 住 濟南潤華皇冠酒店</div>
+          </div>
+        </div>
+        <div style="margin:6px 0 6px 19px; padding-left:18px; border-left:3px dashed var(--border); font-size:0.8rem; font-weight:800; color:var(--calcifer);">🍂 濟南秋色與泉城三勝巡禮</div>
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <div style="background:#fff; border:2px solid var(--border); border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">⛲</div>
+          <div style="flex:1;">
+            <strong>Day 3 (11/08)：黃河千畝銀杏林 ➔ 山東博物館 ➔ 天下第一泉趵突泉 ➔ 大明湖遊船</strong>
+            <div style="font-size:0.82rem; color:var(--muted); margin-top:2px;">黃河流域最大銀杏林 ➔ 國家一級博物館 ➔ 泉城明珠大明湖 ➔ 住 濟南潤華皇冠酒店</div>
+          </div>
+        </div>
+        <div style="margin:6px 0 6px 19px; padding-left:18px; border-left:3px dashed var(--border); font-size:0.8rem; font-weight:800; color:var(--calcifer);">🏛️ 朝聖孔孟之鄉與帝王封禪聖地</div>
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <div style="background:#fff; border:2px solid var(--border); border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">📜</div>
+          <div style="flex:1;">
+            <strong>Day 4 (11/09)：世界遺產【曲阜孔府、孔廟】➔ 泰安【岱廟】</strong>
+            <div style="font-size:0.82rem; color:var(--muted); margin-top:2px;">香宮孔府菜 ➔ 縮微紫禁城「神的府邸」岱廟 ➔ 泰山封禪宴 ➔ 住 泰安建國璞隱酒店</div>
+          </div>
+        </div>
+        <div style="margin:6px 0 6px 19px; padding-left:18px; border-left:3px dashed var(--border); font-size:0.8rem; font-weight:800; color:var(--calcifer);">⛰️ 登頂華夏五嶽之首</div>
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <div style="background:#fff; border:2px solid var(--border); border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">🏔️</div>
+          <div style="flex:1;">
+            <strong>Day 5 (11/10)：五嶽獨尊【泰山】(A線紅門徒步 / B線天外村環保車+索道)</strong>
+            <div style="font-size:0.82rem; color:var(--muted); margin-top:2px;">南天門、天街、玉皇頂極目遠眺 ➔ 御座豆腐宴 ➔ 住 泰安建國璞隱酒店</div>
+          </div>
+        </div>
+        <div style="margin:6px 0 6px 19px; padding-left:18px; border-left:3px dashed var(--border); font-size:0.8rem; font-weight:800; color:var(--calcifer);">🌊 返回海濱明珠青島</div>
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <div style="background:#fff; border:2px solid var(--border); border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">🏙️</div>
+          <div style="flex:1;">
+            <strong>Day 6 (11/11)：青島老城區 CITY WALK ➔ 棧橋 ➔ 雲上海天 360° 觀景塔</strong>
+            <div style="font-size:0.82rem; color:var(--muted); margin-top:2px;">長虹遠引前海棧橋 ➔ 俯瞰浮山灣海岸線 ➔ 海鮮餃子風味餐 ➔ 住 青島金茂萬麗酒店</div>
+          </div>
+        </div>
+        <div style="margin:6px 0 6px 19px; padding-left:18px; border-left:3px dashed var(--border); font-size:0.8rem; font-weight:800; color:var(--calcifer);">🏛️ 紅瓦綠樹碧海藍天巡禮</div>
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <div style="background:#fff; border:2px solid var(--border); border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">🦀</div>
+          <div style="flex:1;">
+            <strong>Day 7 (11/12)：康有為故居 ➔ 小魚山公園觀潮閣 ➔ 八大關萬國建築博物館</strong>
+            <div style="font-size:0.82rem; color:var(--muted); margin-top:2px;">晚餐大鍋蒸海鮮(每人石夾紅螃蟹一隻) ➔ 住 青島金茂萬麗酒店</div>
+          </div>
+        </div>
+        <div style="margin:6px 0 6px 19px; padding-left:18px; border-left:3px dashed var(--border); font-size:0.8rem; font-weight:800; color:var(--calcifer);">✈️ 滿載齊魯回憶凱旋返台</div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="background:#fff; border:2px solid var(--border); border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">🏡</div>
+          <div>
+            <strong>Day 8 (11/13)：青島膠東機場 ➔ 台北桃園國際機場</strong><br>
+            <span style="font-size:0.82rem; color:var(--muted);">SC4085 (13:25-15:45) 平安返抵溫暖家園</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8天餐食與住宿快查總表 -->
+    <div class="card">
+      <h3>📋 8 日餐食與住宿一覽表</h3>
+      <div style="overflow-x:auto;">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>天數/日期</th>
+              <th>早餐</th>
+              <th>午餐</th>
+              <th>晚餐</th>
+              <th>住宿酒店</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>D1</strong> 11/06 (五)</td><td>溫暖的家</td><td>XX</td><td>輕食消夜</td><td>青島香格里拉酒店</td></tr>
+            <tr><td><strong>D2</strong> 11/07 (六)</td><td>飯店內</td><td>風味料理</td><td>古城內藥膳風味餐</td><td>濟南潤華皇冠酒店</td></tr>
+            <tr><td><strong>D3</strong> 11/08 (日)</td><td>飯店內</td><td>中式合菜</td><td>羊肉特色餐</td><td>濟南潤華皇冠酒店</td></tr>
+            <tr><td><strong>D4</strong> 11/09 (一)</td><td>飯店內</td><td>香宮孔府菜</td><td>泰山封禪宴</td><td>泰安建國璞隱酒店</td></tr>
+            <tr><td><strong>D5</strong> 11/10 (二)</td><td>飯店內</td><td>中式合菜</td><td>御座豆腐宴</td><td>泰安建國璞隱酒店</td></tr>
+            <tr><td><strong>D6</strong> 11/11 (三)</td><td>飯店內</td><td>風味料理</td><td>海鮮餃子風味餐</td><td>青島金茂萬麗酒店</td></tr>
+            <tr><td><strong>D7</strong> 11/12 (四)</td><td>飯店內</td><td>風味料理</td><td>大鍋蒸海鮮(石夾紅螃蟹一隻)</td><td>青島金茂萬麗酒店</td></tr>
+            <tr><td><strong>D8</strong> 11/13 (五)</td><td>飯店內</td><td>機上簡餐</td><td>溫暖家園</td><td>溫暖的家</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 3. 每日行程分頁 (預設顯示) ==================== -->
+  <div id="sec-schedule" class="main-sec">
+    <!-- 橫向鐵道時間軸 (8天) -->
+    <div class="rail-timeline">
+      <div class="track">
+        <div class="track-line"></div>
+        <label for="day-1-radio" class="stop"><div class="loco">🛫 抵青島</div><div class="dot"></div><div class="s-date">11/06</div><div class="s-day">週五</div></label>
+        <label for="day-2-radio" class="stop"><div class="loco">🏮 明水城</div><div class="dot"></div><div class="s-date">11/07</div><div class="s-day">週六</div></label>
+        <label for="day-3-radio" class="stop"><div class="loco">⛲ 趵突泉</div><div class="dot"></div><div class="s-date">11/08</div><div class="s-day">週日</div></label>
+        <label for="day-4-radio" class="stop"><div class="loco">📜 孔府廟</div><div class="dot"></div><div class="s-date">11/09</div><div class="s-day">週一</div></label>
+        <label for="day-5-radio" class="stop"><div class="loco">⛰️ 登泰山</div><div class="dot"></div><div class="s-date">11/10</div><div class="s-day">週二</div></label>
+        <label for="day-6-radio" class="stop"><div class="loco">🏙️ 青島遊</div><div class="dot"></div><div class="s-date">11/11</div><div class="s-day">週三</div></label>
+        <label for="day-7-radio" class="stop"><div class="loco">🦀 八大關</div><div class="dot"></div><div class="s-date">11/12</div><div class="s-day">週四</div></label>
+        <label for="day-8-radio" class="stop"><div class="loco">🏡 返桃園</div><div class="dot"></div><div class="s-date">11/13</div><div class="s-day">週五</div></label>
+      </div>
+    </div>
+
+    <!-- Stepper 按鈕列 -->
+    <div class="stepper">
+      <label for="day-1-radio" class="btn-step-label prev-d1">⬅️ 前一天</label>
+      <label for="day-2-radio" class="btn-step-label prev-d2">⬅️ 前一天</label>
+      <label for="day-3-radio" class="btn-step-label prev-d3">⬅️ 前一天</label>
+      <label for="day-4-radio" class="btn-step-label prev-d4">⬅️ 前一天</label>
+      <label for="day-5-radio" class="btn-step-label prev-d5">⬅️ 前一天</label>
+      <label for="day-6-radio" class="btn-step-label prev-d6">⬅️ 前一天</label>
+      <label for="day-7-radio" class="btn-step-label prev-d7">⬅️ 前一天</label>
+
+      <div class="day-step-title title-d1">📍 Day 1 ｜ 11/06 (週五) 桃園 ➔ 青島膠東 ➔ 啟程探索齊魯大地</div>
+      <div class="day-step-title title-d2">📍 Day 2 ｜ 11/07 (週六) 章丘【明水古城・清照泉城】</div>
+      <div class="day-step-title title-d3">📍 Day 3 ｜ 11/08 (週日) 黃河銀杏林 ➔ 山東博物館 ➔ 趵突泉 ➔ 大明湖</div>
+      <div class="day-step-title title-d4">📍 Day 4 ｜ 11/09 (週一) 曲阜孔府、孔廟 ➔ 泰安岱廟</div>
+      <div class="day-step-title title-d5">📍 Day 5 ｜ 11/10 (週二) 五嶽之首【泰山】登頂文化之旅</div>
+      <div class="day-step-title title-d6">📍 Day 6 ｜ 11/11 (週三) 青島老城區 CITY WALK ➔ 棧橋 ➔ 雲上海天</div>
+      <div class="day-step-title title-d7">📍 Day 7 ｜ 11/12 (週四) 康有為故居 ➔ 小魚山公園 ➔ 八大關</div>
+      <div class="day-step-title title-d8">📍 Day 8 ｜ 11/13 (週五) 青島膠東機場 ➔ 台北桃園國際機場</div>
+
+      <label for="day-2-radio" class="btn-step-label next-d2">後一天 ➡️</label>
+      <label for="day-3-radio" class="btn-step-label next-d3">後一天 ➡️</label>
+      <label for="day-4-radio" class="btn-step-label next-d4">後一天 ➡️</label>
+      <label for="day-5-radio" class="btn-step-label next-d5">後一天 ➡️</label>
+      <label for="day-6-radio" class="btn-step-label next-d6">後一天 ➡️</label>
+      <label for="day-7-radio" class="btn-step-label next-d7">後一天 ➡️</label>
+      <label for="day-8-radio" class="btn-step-label next-d8">後一天 ➡️</label>
+    </div>
+
+    <!-- DAY 1 內容 -->
+    <div id="pane-d1" class="day-pane">
+      <div class="banner">
+        <div class="b-icon">🛫</div>
+        <div class="b-title">
+          <h3>Day 1 ｜ 11/06 (週五) <span style="font-size:0.75rem; background:#fff; border:1px solid var(--border); padding:2px 7px; border-radius:999px; color:var(--forest); margin-left:4px;">集合 14:30 桃園二航山東航空22號櫃台</span></h3>
+          <h2>台北桃園 (TPE) ➔ 青島膠東 (TAO) ➔ 齊魯文化首站</h2>
+          <p>🏨 住宿：青島香格里拉酒店 ｜ 🍽️ 早：溫暖的家 ｜ 午：XX ｜ 晚：輕食消夜</p>
+        </div>
+      </div>
+      <div class="strat-card">
+        <div class="strat-row"><span class="strat-badge" style="background:#eaf3ec; color:#1c4826;">📝 今日摘要</span><div>下午 14:30 於桃園機場第二航廈山東航空 22 號櫃台集合（隨團服務人員林昭伶 0988-285482），搭乘 SC4086 直飛青島膠東機場，揭開山東人文與山海探索之旅。</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbf3e2; color:#78480d;">🧳 行李安置</span><div>大行李限重 23kg 託運（務必上鎖），手提行李 7kg 內；行動電源須有 <strong>CCC 標誌</strong>且隨身攜帶、航程中禁止使用；中國出入境嚴禁攜帶打火機。</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbeee8; color:#9c3319;">🔔 明日提醒</span><div>明日 (11/07) 前往濟南章丘，走訪匯聚百脈泉靈動泉水與宋詞文化底蘊的「明水古城・清照泉城」！</div></div>
+      </div>
+      <div class="v-timeline">
+        <div class="v-line"></div>
+        <div class="t-entry">
+          <div class="t-time">14:30</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k flight">✈️ 集合起飛</span><div class="s-title">桃園機場集合 ➔ 搭乘山東航空 SC4086 (16:45 起飛 ➔ 19:15 抵達)</div></div>
+            <div class="s-desc"><strong>【山東省概覽】</strong>一個誕生許多耳熟能詳歷史名人的省份——孔子、孫子、諸葛亮、孟子、王羲之、戚繼光、辛棄疾、李清照、魯班...。位於中國東部沿海，是中華文明的重要發源地之一。從孔孟之鄉到海濱城市，從雄偉的泰山到綿延的海岸線，山東像一本厚重又靈動的書，既寫滿歷史，也流淌著海風與煙火氣。</div>
+          </div>
+        </div>
+        <div class="transit-bar"><div class="transit-pill"><span>⬇️</span> 🚌 專車前往青島市中心五星級酒店辦理入住</div></div>
+        <div class="t-entry">
+          <div class="t-time">20:30</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k hotel">🏨 尊榮入住</span><div class="s-title">入住：青島香格里拉酒店 ＆ 享用輕食消夜</div></div>
+            <div class="s-desc">入住青島香格里拉酒店（電話：+86-532-83883838），享用貼心準備的輕食消夜並好好休息。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 2 內容 -->
+    <div id="pane-d2" class="day-pane">
+      <div class="banner">
+        <div class="b-icon">🏮</div>
+        <div class="b-title">
+          <h3>Day 2 ｜ 11/07 (週六) <span style="font-size:0.75rem; background:#fff; border:1px solid var(--border); padding:2px 7px; border-radius:999px; color:var(--forest); margin-left:4px;">清照泉城・百脈泉群</span></h3>
+          <h2>青島 ➔ 濟南章丘【明水古城】</h2>
+          <p>🏨 住宿：濟南潤華皇冠酒店 ｜ 🍽️ 早：飯店內 ｜ 午：風味料理 ｜ 晚：古城內藥膳風味餐</p>
+        </div>
+      </div>
+      <div class="strat-card">
+        <div class="strat-row"><span class="strat-badge" style="background:#eaf3ec; color:#1c4826;">📝 今日摘要</span><div>告別青島前進「泉城」濟南，走訪宋代詞人李清照故里章丘，探訪將百脈泉靈動泉水與千年古城文化完美交融的旅遊新地標「明水古城」。</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbf3e2; color:#78480d;">🧳 行李安置</span><div>今日更換住宿城市，早晨退房將大行李搬上專車，晚間連續兩晚入住濟南潤華皇冠酒店，免去每日整理行李奔波。</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbeee8; color:#9c3319;">🔔 明日提醒</span><div>明日 (11/08) 漫步黃河流域最大「千畝銀杏林」，走進國家一級「山東博物館」，並遊覽濟南名勝「天下第一泉趵突泉」與「大明湖遊船」！</div></div>
+      </div>
+      <div class="v-timeline">
+        <div class="v-line"></div>
+        <div class="t-entry">
+          <div class="t-time">下午</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k spot">💧 泉城新地標</span><div class="s-title">【明水古城 (清照泉城)】百脈泉畔的活著的千年古城</div></div>
+            <div class="s-desc">位於濟南章丘，匯聚了百脈泉的靈動泉水與千年古城的深厚文化底蘊。以「泉城文化」為靈魂，秉持「理水、營城、傳文、生活、產業」的理念，在自然生態與現代休閒的交織中，打造了一座「活著」的古城。這裡，濟南的泉水文化與古城風情完美交融，成為璀璨的旅遊新地標。</div>
+          </div>
+        </div>
+        <div class="t-entry">
+          <div class="t-time">晚間</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k food">🍲 養生美饌</span><div class="s-title">晚餐：古城內藥膳風味餐 ➔ 入住濟南潤華皇冠酒店</div></div>
+            <div class="s-desc">於古色古香的明水古城內享用養生藥膳風味餐，夜色中欣賞燈火映照泉水的迷人夜韻；晚間入住濟南潤華皇冠酒店（電話：+86-531-88119999）。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 3 內容 -->
+    <div id="pane-d3" class="day-pane">
+      <div class="banner">
+        <div class="b-icon">⛲</div>
+        <div class="b-title">
+          <h3>Day 3 ｜ 11/08 (週日) <span style="font-size:0.75rem; background:#fff; border:1px solid var(--border); padding:2px 7px; border-radius:999px; color:var(--forest); margin-left:4px;">金秋銀杏 ＋ 泉城三勝</span></h3>
+          <h2>黃河銀杏林 ➔ 山東博物館 ➔ 趵突泉 ➔ 大明湖遊船</h2>
+          <p>🏨 住宿：濟南潤華皇冠酒店 ｜ 🍽️ 早：飯店內 ｜ 午：中式合菜 ｜ 晚：羊肉特色餐</p>
+        </div>
+      </div>
+      <div class="strat-card">
+        <div class="strat-row"><span class="strat-badge" style="background:#eaf3ec; color:#1c4826;">📝 今日摘要</span><div>漫步綿延 15 公里的「黃河千畝銀杏林」金黃大道；參觀解讀海岱文明的「山東博物館」；賞乾隆御題「天下第一泉趵突泉」並搭乘「大明湖遊船」。</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbf3e2; color:#78480d;">🧳 行李安置</span><div>連住濟南潤華皇冠酒店第二晚，大行李留置房內，輕裝攜帶隨身背包與相機出門；進入山東博物館請隨身攜帶台胞證以利實名查驗。</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbeee8; color:#9c3319;">🔔 明日提醒</span><div>明日 (11/09) 南下孔孟之鄉曲阜，參觀世界文化遺產「孔府、孔廟」，中午品嚐正宗「香宮孔府菜」，下午前往泰安「岱廟」並享用「泰山封禪宴」！</div></div>
+      </div>
+      <div class="v-timeline">
+        <div class="v-line"></div>
+        <div class="t-entry">
+          <div class="t-time">上午</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k spot">🍂 金秋秘境</span><div class="s-title">【黃河銀杏林】黃河流域規模最大千畝銀杏大道</div></div>
+            <div class="s-desc">在濟南黃河大壩南岸，種植了千畝銀杏，樹齡 20 多年，銀杏林寬 100 米、綿延 15 公里，為黃河流域規模最大銀杏林。（註：最佳觀賞期為 10 月下旬～11 月中，花期受天氣影響甚鉅，若花況不如預期敬請見諒）。</div>
+          </div>
+        </div>
+        <div class="t-entry">
+          <div class="t-time">上午</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k spot">🏛️ 國家一級館</span><div class="s-title">【山東博物館】縱覽齊魯文脈・解讀「海岱文明」核心陣地</div></div>
+            <div class="s-desc">縱覽齊魯文脈的最佳起點。作為國家一級博物館，這裡不僅是展示山東歷史文化的重要窗口，更是解讀「海岱文明」的核心陣地。</div>
+          </div>
+        </div>
+        <div class="t-entry">
+          <div class="t-time">下午</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k spot">💦 天下第一泉</span><div class="s-title">【趵突泉】乾隆皇帝御題「第一泉」・三股泉眼湧如沸騰</div></div>
+            <div class="s-desc">泉水從三個石雕虎口中奔湧而出，聲勢如虎嘯，氣勢磅礴。被譽為「天下第一泉」，乾隆皇帝曾為其題字「第一泉」，三股泉眼不停噴湧，清澈透明，泉水從池底湧出宛如沸騰。</div>
+          </div>
+        </div>
+        <div class="t-entry">
+          <div class="t-time">下午</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k spot">🚤 泉城明珠</span><div class="s-title">【大明湖遊船】濟南三大名勝之一</div></div>
+            <div class="s-desc">大明湖是濟南三大名勝之一，是泉城重要風景名勝和開放視窗，素有「泉城明珠」之美譽。乘船遊湖欣賞四面荷花三面柳、一城山色半城湖的詩意景致。晚間享用「羊肉特色餐」。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 4 內容 -->
+    <div id="pane-d4" class="day-pane">
+      <div class="banner">
+        <div class="b-icon">📜</div>
+        <div class="b-title">
+          <h3>Day 4 ｜ 11/09 (週一) <span style="font-size:0.75rem; background:#fff; border:1px solid var(--border); padding:2px 7px; border-radius:999px; color:var(--forest); margin-left:4px;">世界文化遺產 ＋ 封禪聖地</span></h3>
+          <h2>曲阜【孔府、孔廟】➔ 泰安【岱廟】</h2>
+          <p>🏨 住宿：泰安建國璞隱酒店 ｜ 🍽️ 早：飯店內 ｜ 午：香宮孔府菜 ｜ 晚：泰山封禪宴</p>
+        </div>
+      </div>
+      <div class="strat-card">
+        <div class="strat-row"><span class="strat-badge" style="background:#eaf3ec; color:#1c4826;">📝 今日摘要</span><div>走進世界文化遺產曲阜「孔廟、孔府」感受儒家千年禮樂傳承，午間品嚐講究做工的「香宮孔府菜」；下午前往登泰山起點「岱廟」，晚宴享用「泰山封禪宴」。</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbf3e2; color:#78480d;">🧳 行李安置</span><div>早晨濟南退房將行李放上專車，傍晚抵達泰安入住「泰安建國璞隱酒店」（連住兩晚），今晚可整理明日登泰山的輕便隨身背包。</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbeee8; color:#9c3319;">🔔 明日提醒</span><div>明日 (11/10) 挑戰華夏五嶽之首【泰山】！請穿著透氣舒適運動鞋、備好飲水零食與防風保暖衣物（高山氣溫較低）。</div></div>
+      </div>
+      <div class="v-timeline">
+        <div class="v-line"></div>
+        <div class="t-entry">
+          <div class="t-time">上午</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k spot">🏛️ 世界文化遺產</span><div class="s-title">【曲阜孔府、孔廟】探索中國古代思想家孔子的歷史傳承與文化精神</div></div>
+            <div class="s-desc">位於山東省曲阜市，是祀奉孔子的孔廟、孔子嫡系後裔居住的孔府，1994 年曲阜孔廟和孔府登錄世界文化遺產。漫步於古老的建築群中，感受古柏森森、碑刻林立的深厚文化底蘊。中午享用精緻「香宮孔府菜」。</div>
+          </div>
+        </div>
+        <div class="t-entry">
+          <div class="t-time">下午</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k spot">⛩️ 神的府邸</span><div class="s-title">【泰安岱廟】縮微的紫禁城・歷代帝王舉辦封禪祭祀重地</div></div>
+            <div class="s-desc">位於泰安市繁華地段，與岱頂南天門同處在一條中軸線上。始於秦漢（「秦即作疇，漢亦起宮」），是帝王舉辦封禪祭祀泰山神的場所，又被稱為「登泰山的起點」。佔地 9.6 萬平方米的宮城式建築群，紅牆黛瓦、廟貌巍峨，如一座縮微的紫禁城，被譽為「神的府邸」。晚間享用「泰山封禪宴」並入住泰安建國璞隱酒店（電話：+86-538-6683333）。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 5 內容 -->
+    <div id="pane-d5" class="day-pane">
+      <div class="banner">
+        <div class="b-icon">⛰️</div>
+        <div class="b-title">
+          <h3>Day 5 ｜ 11/10 (週二) <span style="font-size:0.75rem; background:#fff; border:1px solid var(--border); padding:2px 7px; border-radius:999px; color:var(--forest); margin-left:4px;">五嶽獨尊・雙線自選</span></h3>
+          <h2>華夏五嶽之首【泰山】(A線紅門徒步 / B線天外村環保車+索道)</h2>
+          <p>🏨 住宿：泰安建國璞隱酒店 ｜ 🍽️ 早：飯店內 ｜ 午：中式合菜 ｜ 晚：御座豆腐宴</p>
+        </div>
+      </div>
+      <div class="strat-card">
+        <div class="strat-row"><span class="strat-badge" style="background:#eaf3ec; color:#1c4826;">📝 今日摘要</span><div>登頂五嶽之首「泰山」，依出發前 10 天選定之路線（A線紅門徒步 9.5KM 或 B線天外村環保車＋中天門索道直達南天門），領略歷代帝王封禪與摩崖石刻壯闊風光，晚宴品嚐泰山三美「御座豆腐宴」。</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbf3e2; color:#78480d;">🧳 行李安置</span><div>連住泰安建國璞隱酒店第二晚，大行李安穩放房間，僅背隨身輕便背包（裝水、高熱量零食、防風外套、雨具、個人藥品及台胞證）上山。</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbeee8; color:#9c3319;">🔔 明日提醒</span><div>明日 (11/11) 返回海濱城市青島，展開老城區 CITY WALK、漫步前海「棧橋」，並登上「雲上海天」360 度俯瞰浮山灣海岸線！</div></div>
+      </div>
+      <div class="v-timeline">
+        <div class="v-line"></div>
+        <div class="t-entry">
+          <div class="t-time">全天</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k spot">🏔️ 五嶽之首</span><div class="s-title">【泰山風景名勝區】A 線徒步文化走廊 vs B 線省力高空索道</div></div>
+            <div class="s-desc">
+              <strong>A. 泰山紅門盤道徒步線（最經典文化登山體驗）：</strong>全程從紅門入口至南天門約 9.5KM，覆蓋泰山前山所有核心景點。沿途分佈數十處廟宇、數百處摩崖石刻與千年古樹（斗母宮、經石峪、壺天閣、五大夫松、十八盤），可謂「登山即讀史」。<br><br>
+              <strong>B. 泰山天外村汽車登山線（最省力登頂路線）：</strong>前段由天外村廣場搭乘景區環保車至中天門（全長 14 公里，車程約 30 分鐘，視野開闊平緩）；抵達中天門後直接搭乘<strong>「中天門索道」</strong>（全長 2078 米，運行約 8-15 分鐘）直達南天門，高空俯瞰雲海與森林！晚間享用「御座豆腐宴」。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 6 內容 -->
+    <div id="pane-d6" class="day-pane">
+      <div class="banner">
+        <div class="b-icon">🏙️</div>
+        <div class="b-title">
+          <h3>Day 6 ｜ 11/11 (週三) <span style="font-size:0.75rem; background:#fff; border:1px solid var(--border); padding:2px 7px; border-radius:999px; color:var(--forest); margin-left:4px;">百年海濱・長虹遠引</span></h3>
+          <h2>泰安 ➔ 青島老城區 CITY WALK ➔ 棧橋 ➔ 雲上海天</h2>
+          <p>🏨 住宿：青島金茂萬麗酒店 ｜ 🍽️ 早：飯店內 ｜ 午：風味料理 ｜ 晚：海鮮餃子風味餐</p>
+        </div>
+      </div>
+      <div class="strat-card">
+        <div class="strat-row"><span class="strat-badge" style="background:#eaf3ec; color:#1c4826;">📝 今日摘要</span><div>返回東西合璧的百年海濱城市「青島」，悠閒漫步老城區 CITY WALK，走訪青島標誌「前海棧橋」，並登上「雲上海天」觀景塔 360 度飽覽青島海岸線與浮山灣美景。</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbf3e2; color:#78480d;">🧳 行李安置</span><div>早晨泰安退房上車，返回青島後連續兩晚入住「青島金茂萬麗酒店」；海邊海風較涼，請隨身帶件防風外套。</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbeee8; color:#9c3319;">🔔 明日提醒</span><div>明日 (11/12) 參觀德式建築「康有為故居」、登「小魚山公園」觀潮閣俯瞰紅瓦綠樹，漫步「八大關」萬國建築博物館，晚宴享用「大鍋蒸海鮮(石夾紅螃蟹一隻)」！</div></div>
+      </div>
+      <div class="v-timeline">
+        <div class="v-line"></div>
+        <div class="t-entry">
+          <div class="t-time">下午</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k spot">🚶 百年風華</span><div class="s-title">【青島老城區 CITY WALK】＆【前海棧橋】</div></div>
+            <div class="s-desc">「青島」是一座建制已有 120 多年歷史的城市，東西合璧的百年滄桑彰顯不可複製的歲月痕跡。<strong>【棧橋】</strong>又名前海棧橋，坐落於市內最繁華的中山路南面，從海岸一直延伸至海中，素有「長虹遠引」的美譽。</div>
+          </div>
+        </div>
+        <div class="t-entry">
+          <div class="t-time">下午</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k spot">🌆 雲端視野</span><div class="s-title">【雲上海天】360 度俯瞰青島海岸線、五四廣場與浮山灣</div></div>
+            <div class="s-desc">現代藝術中心及高空觀景塔，可 360 度全方位俯瞰青島壯麗海岸線、五四廣場和浮山灣，文化與自然風光完美融合。晚間享用「海鮮餃子風味餐」並入住青島金茂萬麗酒店（電話：+86-532-55959999）。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 7 內容 -->
+    <div id="pane-d7" class="day-pane">
+      <div class="banner">
+        <div class="b-icon">🦀</div>
+        <div class="b-title">
+          <h3>Day 7 ｜ 11/12 (週四) <span style="font-size:0.75rem; background:#fff; border:1px solid var(--border); padding:2px 7px; border-radius:999px; color:var(--forest); margin-left:4px;">紅瓦綠樹 ＋ 蒸海鮮螃蟹宴</span></h3>
+          <h2>康有為故居 ➔ 小魚山公園 ➔ 八大關萬國建築博物館</h2>
+          <p>🏨 住宿：青島金茂萬麗酒店 ｜ 🍽️ 早：飯店內 ｜ 午：風味料理 ｜ 晚：大鍋蒸海鮮(石夾紅螃蟹一隻)</p>
+        </div>
+      </div>
+      <div class="strat-card">
+        <div class="strat-row"><span class="strat-badge" style="background:#eaf3ec; color:#1c4826;">📝 今日摘要</span><div>走訪德式紅瓦黃牆「康有為故居」，登「小魚山公園」觀潮閣俯瞰青島「藍天、碧海、青山、綠樹、紅瓦、黃牆」經典風貌，漫步最美街區「八大關」；晚宴大啖現蒸海鮮與石夾紅螃蟹！</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbf3e2; color:#78480d;">🧳 行李安置</span><div>連住青島金茂萬麗酒店第二晚，今晚請預先整理好戰利品與託運行李（液體超過 100ml、剪刀指甲刀等務必放入託運箱，行動電源隨身）。</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbeee8; color:#9c3319;">🔔 明日提醒</span><div>明日 (11/13) 行程最終日！搭乘山東航空 SC4085 (13:25 起飛)，預計 15:45 返抵台北桃園國際機場！</div></div>
+      </div>
+      <div class="v-timeline">
+        <div class="v-line"></div>
+        <div class="t-entry">
+          <div class="t-time">上午</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k spot">🏡 歷史故居</span><div class="s-title">【康有為故居】典型德式風格紅瓦黃牆建築</div></div>
+            <div class="s-desc">建築是典型的德式風格，紅瓦黃牆別具韻味。室內陳列一幅幅珍貴照片與歷史文物，靜靜訴說著康有為先生波瀾壯闊的一生。</div>
+          </div>
+        </div>
+        <div class="t-entry">
+          <div class="t-time">上午</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k spot">🐟 山海全景</span><div class="s-title">【小魚山公園】三層八角「觀潮閣」飽覽青島經典六色風貌</div></div>
+            <div class="s-desc">圍繞「海」的主題、突出「魚」的特色，主要建築觀潮閣三層八角高 18 米，與前海棧橋的回瀾閣遙相呼應。沿外設護欄平台繞閣一周，可飽覽青島「藍天、碧海、青山、綠樹、紅瓦、黃牆」的獨特風貌。</div>
+          </div>
+        </div>
+        <div class="t-entry">
+          <div class="t-time">下午</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k spot">🏰 萬國建築</span><div class="s-title">【八大關】匯集 20 多個國家近 400 座風格別墅</div></div>
+            <div class="s-desc">南臨太平灣、北依太平山，匯集了 20 多個國家近 400 座風格各異的別墅，被譽為「萬國建築博物館」，是青島最美街區與重要歷史文化地標。晚餐享用豐盛「大鍋蒸海鮮（每人石夾紅螃蟹一隻）」。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 8 內容 -->
+    <div id="pane-d8" class="day-pane">
+      <div class="banner">
+        <div class="b-icon">🏡</div>
+        <div class="b-title">
+          <h3>Day 8 ｜ 11/13 (週五) <span style="font-size:0.75rem; background:#fff; border:1px solid var(--border); padding:2px 7px; border-radius:999px; color:var(--forest); margin-left:4px;">SC4085 13:25起飛 ➔ 15:45抵達</span></h3>
+          <h2>青島膠東機場 ➔ 台北桃園國際機場</h2>
+          <p>🏡 住宿：溫暖的家 ｜ 🍽️ 早：飯店內 ｜ 午：機上簡餐 ｜ 晚：溫暖家園</p>
+        </div>
+      </div>
+      <div class="strat-card">
+        <div class="strat-row"><span class="strat-badge" style="background:#eaf3ec; color:#1c4826;">📝 今日摘要</span><div>飯店內享用早餐後整理行裝，專車前往青島膠東國際機場辦理離境與登機手續，搭乘山東航空 SC4085 直飛返抵台北桃園，圓滿結束台大 B78 山東 8 日考察行！</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbf3e2; color:#78480d;">🧳 行李檢查</span><div>退房前請再三檢查保險箱、床頭充電器與浴室衣物是否遺漏；打火機禁止攜帶上機，動植物產品與生鮮蔬果、肉類製品嚴禁帶回台灣。</div></div>
+        <div class="strat-row"><span class="strat-badge" style="background:#fbeee8; color:#9c3319;">🔔 返程航班</span><div>山東航空 SC4085 預計 13:25 由青島膠東起飛，15:45 降落台北桃園國際機場，祝您旅途愉快！</div></div>
+      </div>
+      <div class="v-timeline">
+        <div class="v-line"></div>
+        <div class="t-entry">
+          <div class="t-time">13:25</div>
+          <div class="t-node"></div>
+          <div class="s-box">
+            <div class="s-header"><span class="badge-k flight">🛫 凱旋返國</span><div class="s-title">青島膠東機場 (TAO) ➔ 台北桃園國際機場 (TPE) 山東航空 SC4085</div></div>
+            <div class="s-desc">揮別青島，搭機返回溫暖家園（13:25 起飛，15:45 抵達台北桃園機場），結束此次山東精彩考察之旅！</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 4. 泰山攻略分頁 ==================== -->
+  <div id="sec-taishan" class="main-sec">
+    <div class="card" style="border-left: 6px solid var(--calcifer);">
+      <h3>⛰️ 五嶽之首【泰山】雙登山路線比較 (出發前10天確認)</h3>
+      <p style="font-size:0.86rem; color:var(--muted); margin-bottom:10px;">請依自身體力與偏好選擇路線（需於出發前 10 天告知領隊以利預購門票）：</p>
+      
+      <div class="route-box">
+        <h4>🅰️ 路線 A：泰山紅門盤道徒步線（經典文化登山體驗）</h4>
+        <p style="font-size:0.85rem;">
+          • <strong>路線範圍：</strong>紅門入口 ➔ 岱宗坊 ➔ 斗母宮 ➔ 經石峪 ➔ 壺天閣 ➔ 中天門 ➔ 五大夫松 ➔ 十八盤 ➔ 南天門（全程約 <strong>9.5 KM</strong>）。<br>
+          • <strong>特色亮點：</strong>泰山文化的「精華走廊」，覆蓋前山所有核心景點、數十處廟宇、數百處摩崖石刻與千年古樹，完整體驗從山麓到山巔的雄偉氣勢，「登山即讀史」。<br>
+          • <strong>體力需求：</strong>全程徒步攀登台階，體力消耗較大，適合平時有登山健行習慣之貴賓。
+        </p>
+      </div>
+
+      <div class="route-box" style="margin-top:12px;">
+        <h4>🅱️ 路線 B：泰山天外村汽車登山線（最省力高空賞景路線）</h4>
+        <p style="font-size:0.85rem;">
+          • <strong>前段（天外村廣場 ➔ 中天門）：</strong>於天外村遊客中心搭乘景區環保車至中天門（全長 <strong>14 公里</strong>，路面平穩，車程約 <strong>30 分鐘</strong>），視野開闊欣賞泰山前山「曠達」山景。<br>
+          • <strong>後段（中天門 ➔ 南天門）：</strong>抵達中天門後直接搭乘<strong>「中天門索道」</strong>（全長約 <strong>2,078 米</strong>，運行約 <strong>8～15 分鐘</strong>）直達南天門，高空俯瞰雲海、森林與十八盤台階！<br>
+          • <strong>登頂延伸：</strong>抵達南天門後可漫步天街、碧霞祠、唐摩崖、五嶽獨尊石刻，並登上泰山最高點「玉皇頂」（海拔 1,545 米）。
+        </p>
+      </div>
+    </div>
+
+    <div class="card" style="border-left: 6px solid var(--forest);">
+      <h3>🎒 攀登泰山隨身必備物品清單</h3>
+      <p>
+        1. <strong>食物與飲水：</strong>請在體力範圍內攜帶礦泉水、能量零食及水果，隨時補充水分與體力。<br>
+        2. <strong>離線地圖導航：</strong>山上雖有指標但區域廣闊，建議手機預先下載<strong>「高德地圖」</strong>以隨時掌握所在位置。<br>
+        3. <strong>裝備與防護：</strong>務必穿著<strong>舒適透氣防滑運動鞋</strong>，建議攜帶<strong>登山杖、保暖防風外套、遮陽帽、防曬用品及 OK 繃</strong>。
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== 5. 美饌與匯率分頁 ==================== -->
+  <div id="sec-menu" class="main-sec">
+    <div class="card" style="border-left: 6px solid var(--calcifer);">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+        <h3 style="margin-bottom:0;">💴 人民幣 (RMB) 即時換算新台幣 (TWD) 計算機</h3>
+        <span style="font-size:0.78rem; font-weight:800; background:#f1ebd9; padding:2px 8px; border-radius:6px; border:1px solid var(--border);">手冊參考匯率：1 RMB ≈ 4.8 TWD</span>
+      </div>
+      <p style="margin:6px 0 10px; font-size:0.86rem; color:var(--muted);">在大陸旅遊消費支付以「支付寶」或「微信支付」為主，建議備適量人民幣現鈔零用：</p>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <input type="number" id="rmb-in" class="input-box" placeholder="輸入人民幣金額 (例: 100)" oninput="calcRmb()" />
+        <span style="font-size:1.1rem; font-weight:900;">¥ RMB</span>
+      </div>
+      <div style="margin-top:12px; padding:12px; background:var(--hay-bg); border:2px solid var(--border); border-radius:12px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-size:0.78rem; font-weight:800; color:var(--muted);">折合新台幣約</div>
+          <div style="font-size:0.75rem; color:#8c7e6e;" id="rmb-calc-note">依手冊匯率 1 RMB = 4.8 TWD 試算</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:1.4rem; font-weight:900; color:var(--calcifer);" id="twd-out">NT$ 0</div>
+          <div style="font-size:0.78rem; font-weight:800; color:var(--forest);">心算秘訣：人民幣金額乘以 5 約為台幣</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🍽️ 行程精選齊魯特色盛宴一覽</h3>
+      <div class="m-item">
+        <div><strong>Day 2 晚餐：明水古城內藥膳風味餐</strong> <span style="font-size:0.82rem; color:var(--muted);">章丘泉城養生佳餚</span></div>
+        <div><span style="font-weight:900; color:var(--forest);">特色安排</span></div>
+      </div>
+      <div class="m-item">
+        <div><strong>Day 3 晚餐：濟南羊肉特色餐</strong> <span style="font-size:0.82rem; color:var(--muted);">溫補暖胃魯菜風味</span></div>
+        <div><span style="font-weight:900; color:var(--forest);">特色安排</span></div>
+      </div>
+      <div class="m-item">
+        <div><strong>Day 4 午餐：曲阜香宮孔府菜</strong> <span style="font-size:0.82rem; color:var(--muted);">千年儒家官府名菜</span></div>
+        <div><span style="font-weight:900; color:var(--forest);">特色安排</span></div>
+      </div>
+      <div class="m-item">
+        <div><strong>Day 4 晚餐：泰安泰山封禪宴</strong> <span style="font-size:0.82rem; color:var(--muted);">帝王封禪文化主題宴</span></div>
+        <div><span style="font-weight:900; color:var(--forest);">特色安排</span></div>
+      </div>
+      <div class="m-item">
+        <div><strong>Day 5 晚餐：泰山御座豆腐宴</strong> <span style="font-size:0.82rem; color:var(--muted);">泰山泉水白菜豆腐三美</span></div>
+        <div><span style="font-weight:900; color:var(--forest);">特色安排</span></div>
+      </div>
+      <div class="m-item">
+        <div><strong>Day 6 晚餐：青島海鮮餃子風味餐</strong> <span style="font-size:0.82rem; color:var(--muted);">墨魚、黃花魚鮮美水餃</span></div>
+        <div><span style="font-weight:900; color:var(--forest);">特色安排</span></div>
+      </div>
+      <div class="m-item">
+        <div><strong>Day 7 晚餐：青島大鍋蒸海鮮</strong> <span style="font-size:0.82rem; color:var(--muted);">每人享用「石夾紅螃蟹」一隻</span></div>
+        <div><span style="font-weight:900; color:var(--calcifer);">壓軸海味</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 6. 住宿飯店分頁 ==================== -->
+  <div id="sec-hotel" class="main-sec">
+    <div class="card" style="border-left: 6px solid #6b21a8;">
+      <h3>🏨 全程七晚精選酒店聯絡資訊</h3>
+      <p style="margin-bottom:12px; font-size:0.85rem; color:var(--muted);">飯店大都有提供電熱水壺（自來水不可生飲）、沐浴洗髮備品與毛巾，<strong>牙膏、牙刷及刮鬍刀請務必自備</strong>：</p>
+      
+      <div class="tip-box tip-blue" style="margin-bottom:10px;">
+        <strong>📍 11/06 (1晚) ｜ 青島香格里拉酒店</strong><br>
+        • 聯絡電話：<a href="tel:+8653283883838" style="font-weight:800; color:#1e4562;">+86-532-83883838</a>
+      </div>
+
+      <div class="tip-box tip-gold" style="margin-bottom:10px;">
+        <strong>📍 11/07 - 11/08 (連住2晚) ｜ 濟南潤華皇冠酒店</strong><br>
+        • 聯絡電話：<a href="tel:+8653188119999" style="font-weight:800; color:#724c08;">+86-531-88119999</a>
+      </div>
+
+      <div class="tip-box tip-green" style="margin-bottom:10px;">
+        <strong>📍 11/09 - 11/10 (連住2晚) ｜ 泰安建國璞隱酒店</strong><br>
+        • 聯絡電話：<a href="tel:+865386683333" style="font-weight:800; color:#1c4826;">+86-538-6683333</a>
+      </div>
+
+      <div class="tip-box tip-red">
+        <strong>📍 11/11 - 11/12 (連住2晚) ｜ 青島金茂萬麗酒店</strong><br>
+        • 聯絡電話：<a href="tel:+8653255959999" style="font-weight:800; color:#8f2314;">+86-532-55959999</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 7. 行李與出入境須知分頁 ==================== -->
+  <div id="sec-tips" class="main-sec">
+    <div class="card" style="border-left: 6px solid var(--calcifer);">
+      <h3>🧳 隨身手提行李規定 (1件 7公斤內)</h3>
+      <p>
+        • <strong>尺寸重量：</strong>長寬高總和不超過 115 公分（55×40×20 公分），限重 <strong>7 公斤</strong>以內（胖胖箱不可手提）。<br>
+        • <strong>行動電源與鋰電池（極重要！）：</strong>一律須放置於<strong>隨身行李</strong>中，不可託運。<strong>2025 年 6 月 28 日起，須攜帶有「CCC 標誌」行動電源，並全面禁止於航程中使用行動電源與備用鋰電池</strong>，登機前請先將手機充飽電。<br>
+        • <strong>液體、膠狀及噴霧類：</strong>香水、漱口水、隱形眼鏡藥水、化妝水、乳液、面膜、牙膏、髮膠等隨身攜帶上機，<strong>每瓶皆須小於 100 毫升</strong>，且全部瓶罐總量不超過 1 公升。<br>
+        • <strong>自拍棒與雨傘：</strong>管徑未超過 1 公分、可伸縮且收合後高度<strong>未超過 60 公分</strong>之自拍棒/腳架可隨身；摺疊雨傘可隨身，長柄雨傘須託運。<br>
+        • <strong>嚴禁攜帶：</strong><strong>中國地區出入境全面禁止攜帶打火機</strong>（隨身與託運皆不可）。
+      </p>
+    </div>
+
+    <div class="card" style="border-left: 6px solid var(--sky);">
+      <h3>📦 託運行李規定 (1件 23公斤內)</h3>
+      <p>
+        • <strong>基本規範：</strong>國際航空規定每人 <strong>1 件託運行李限重 23 公斤內</strong>，請掛上行李牌註明姓名與聯絡電話並務必上鎖。<br>
+        • <strong>必須託運物品：</strong><br>
+          1. <strong>刀類與尖銳物品：</strong>指甲刀、水果刀、剪刀、美工刀、修眉刀、金屬毛線針等。<br>
+          2. <strong>超過 100 毫升之液體/噴霧：</strong>化妝水、洗髮精、沐浴乳等（每人託運總量不得超過 2,000 毫升）。<br>
+          3. <strong>大型腳架與運動用品：</strong>管徑 1 公分以上或收合後超過 60 公分之腳架、登山杖等。<br>
+          4. <strong>3C 產品：</strong>筆電、平板與相機若放託運，請務必將電池拔出隨身攜帶。
+      </p>
+    </div>
+
+    <div class="card" style="border-left: 6px solid var(--forest);">
+      <h3>🛡️ 海關申報、電壓與旅遊安全須知</h3>
+      <p>
+        • <strong>海關與動植物限制：</strong>攜帶超過 <strong>2 萬人民幣</strong>或 <strong>5 千美金</strong>以上須辦理申報；滿 20 歲准免稅攜帶煙酒一瓶（不超過 1 公升）及 200 支煙；<strong>嚴禁攜帶生鮮水果、蔬果及動植物產品</strong>出入境。<br>
+        • <strong>電壓與插座：</strong>大陸電壓為 <strong>220 伏特</strong>（高級飯店通常設有 1~2 個 110 伏特插座），使用吹風機或電器前請先確認支援 100-240V 國際電壓。<br>
+        • <strong>旅遊安全：</strong>錢財不露白，攜帶過多現金並不安全；外出結伴同行並留意個人隨身財物。
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function calcRmb() {
+    var rmb = parseFloat(document.getElementById('rmb-in').value) || 0;
+    var twd = Math.round(rmb * 4.8);
+    document.getElementById('twd-out').innerText = 'NT$ ' + twd.toLocaleString();
+    if (rmb > 0) {
+      document.getElementById('rmb-calc-note').innerText = '¥' + rmb.toLocaleString() + ' RMB × 4.8 匯率換算';
+    } else {
+      document.getElementById('rmb-calc-note').innerText = '依手冊匯率 1 RMB = 4.8 TWD 試算';
+    }
+  }
+</script>
+</body>
+</html>
