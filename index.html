@@ -33,7 +33,6 @@
       box-shadow: 2px 2px 0px var(--border); display: inline-flex; align-items: center; gap: 6px;
     }
 
-    /* 隱藏 Radio 輸入控制項 (純 CSS 切換，100% 免疫任何 JS 沙盒限制) */
     input.pure-radio {
       position: fixed;
       top: -9999px;
@@ -42,7 +41,6 @@
       pointer-events: none;
     }
 
-    /* 頂部主導覽列 */
     .nav {
       display: flex; justify-content: center; gap: 5px; margin-bottom: 18px;
       background: #ffffff; padding: 6px; border-radius: 999px;
@@ -54,7 +52,6 @@
     }
     .nav-label:hover { background: rgba(0,0,0,0.04); color: var(--text); }
 
-    /* 主導覽切換高亮 */
     #tab-sched:checked ~ .wrap .nav label[for="tab-sched"],
     #tab-flight:checked ~ .wrap .nav label[for="tab-flight"],
     #tab-over:checked ~ .wrap .nav label[for="tab-over"],
@@ -65,7 +62,6 @@
       background: var(--calcifer); color: #fff; box-shadow: 1.5px 1.5px 0px var(--border);
     }
 
-    /* 主區塊顯示控制 */
     .main-sec { display: none; }
     #tab-sched:checked ~ .wrap #sec-schedule { display: block; }
     #tab-flight:checked ~ .wrap #sec-flights { display: block; }
@@ -75,7 +71,6 @@
     #tab-taishan:checked ~ .wrap #sec-taishan { display: block; }
     #tab-tips:checked ~ .wrap #sec-tips { display: block; }
 
-    /* 橫向鐵道時間軸 (8天) */
     .rail-timeline {
       background: #fff; border: 2.5px solid var(--border); border-radius: 20px;
       padding: 16px 12px 12px; box-shadow: var(--shadow); margin-bottom: 16px; overflow-x: auto;
@@ -92,7 +87,6 @@
     .s-date { font-size: 0.8rem; font-weight: 800; display: inline-block; }
     .s-day { font-size: 0.7rem; color: var(--muted); font-weight: 700; }
 
-    /* 鐵道站點選中樣式 */
     #day-1-radio:checked ~ .wrap .stop[for="day-1-radio"] .dot,
     #day-2-radio:checked ~ .wrap .stop[for="day-2-radio"] .dot,
     #day-3-radio:checked ~ .wrap .stop[for="day-3-radio"] .dot,
@@ -124,7 +118,6 @@
       background: var(--calcifer); color: #fff; padding: 2px 6px; border-radius: 6px; border: 1px solid var(--border);
     }
 
-    /* Stepper 控制列 */
     .stepper {
       display: flex; justify-content: space-between; align-items: center; gap: 8px;
       background: #fdfaf4; padding: 8px 12px; border-radius: 14px; border: 2px solid var(--border);
@@ -137,7 +130,6 @@
     }
     .day-step-title { font-weight: 900; font-size: 0.9rem; color: var(--forest); display: none; text-align: center; }
 
-    /* 各天專屬 Stepper 狀態顯示 */
     #day-1-radio:checked ~ .wrap .prev-d1, #day-1-radio:checked ~ .wrap .title-d1, #day-1-radio:checked ~ .wrap .next-d2 { display: inline-block; }
     #day-2-radio:checked ~ .wrap .prev-d1, #day-2-radio:checked ~ .wrap .title-d2, #day-2-radio:checked ~ .wrap .next-d3 { display: inline-block; }
     #day-3-radio:checked ~ .wrap .prev-d2, #day-3-radio:checked ~ .wrap .title-d3, #day-3-radio:checked ~ .wrap .next-d4 { display: inline-block; }
@@ -147,7 +139,6 @@
     #day-7-radio:checked ~ .wrap .prev-d6, #day-7-radio:checked ~ .wrap .title-d7, #day-7-radio:checked ~ .wrap .next-d8 { display: inline-block; }
     #day-8-radio:checked ~ .wrap .prev-d7, #day-8-radio:checked ~ .wrap .title-d8, #day-8-radio:checked ~ .wrap .next-d8 { display: inline-block; }
 
-    /* 每日內容顯示切換 */
     .day-pane { display: none; }
     #day-1-radio:checked ~ .wrap #pane-d1 { display: block; }
     #day-2-radio:checked ~ .wrap #pane-d2 { display: block; }
@@ -158,7 +149,6 @@
     #day-7-radio:checked ~ .wrap #pane-d7 { display: block; }
     #day-8-radio:checked ~ .wrap #pane-d8 { display: block; }
 
-    /* 卡片與手帳樣式 */
     .card {
       background: #fff; border: 2.5px solid var(--border); border-radius: 20px;
       padding: 20px; box-shadow: var(--shadow); margin-bottom: 18px;
@@ -201,8 +191,6 @@
     .s-desc { font-size: 0.88rem; color: #3e3831; line-height: 1.65; margin-top: 4px; }
     .transit-bar { margin: 2px 0 12px 60px; }
     .transit-pill { background: #fdfaf4; border: 1.5px solid var(--border); border-radius: 999px; padding: 4px 12px; font-size: 0.8rem; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; box-shadow: 1px 1px 0px var(--border); }
-    .link-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-    .link-btn { display: inline-flex; align-items: center; gap: 4px; padding: 5px 11px; border-radius: 8px; font-size: 0.78rem; font-weight: 800; text-decoration: none; color: var(--text); background: #f1ebd9; border: 1.5px solid var(--border); box-shadow: 1px 1px 0px var(--border); }
     .tbl { width: 100%; border-collapse: collapse; margin-top: 10px; }
     .tbl th, .tbl td { border: 1.5px solid var(--border); padding: 8px 10px; font-size: 0.84rem; }
     .tbl th { background: #ede6da; font-weight: 900; }
@@ -214,7 +202,6 @@
 </head>
 <body>
 
-  <!-- PURE CSS RADIO INPUTS -->
   <input type="radio" name="main_tab" id="tab-sched" class="pure-radio" checked>
   <input type="radio" name="main_tab" id="tab-flight" class="pure-radio">
   <input type="radio" name="main_tab" id="tab-over" class="pure-radio">
@@ -223,7 +210,6 @@
   <input type="radio" name="main_tab" id="tab-hotel" class="pure-radio">
   <input type="radio" name="main_tab" id="tab-tips" class="pure-radio">
 
-  <!-- 8天切換 RADIO -->
   <input type="radio" name="day_tab" id="day-1-radio" class="pure-radio" checked>
   <input type="radio" name="day_tab" id="day-2-radio" class="pure-radio">
   <input type="radio" name="day_tab" id="day-3-radio" class="pure-radio">
@@ -238,7 +224,6 @@
     <span>⛰️ 台大B78山東8日考察行旅遊手冊 ｜ 2026.11.06 - 2026.11.13</span>
   </div>
 
-  <!-- 頂部導覽按鈕標籤 -->
   <div class="nav">
     <label for="tab-flight" class="nav-label">✈️ 航班集合</label>
     <label for="tab-over" class="nav-label">🗺️ 總覽</label>
@@ -249,7 +234,7 @@
     <label for="tab-tips" class="nav-label">🧳 行李須知</label>
   </div>
 
-  <!-- ==================== 1. 航班與集合資訊分頁 ==================== -->
+  <!-- 1. 航班與集合資訊分頁 -->
   <div id="sec-flights" class="main-sec">
     <div class="card" style="border-left: 6px solid var(--calcifer);">
       <h3>📢 集合資訊與隨團服務人員</h3>
@@ -299,7 +284,7 @@
     </div>
   </div>
 
-  <!-- ==================== 2. 總覽分頁 ==================== -->
+  <!-- 2. 總覽分頁 -->
   <div id="sec-overview" class="main-sec">
     <div class="card" style="border-left: 6px solid var(--forest);">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
@@ -376,7 +361,6 @@
       </div>
     </div>
 
-    <!-- 8天餐食與住宿快查總表 -->
     <div class="card">
       <h3>📋 8 日餐食與住宿一覽表</h3>
       <div style="overflow-x:auto;">
@@ -405,9 +389,8 @@
     </div>
   </div>
 
-  <!-- ==================== 3. 每日行程分頁 (預設顯示) ==================== -->
+  <!-- 3. 每日行程分頁 -->
   <div id="sec-schedule" class="main-sec">
-    <!-- 橫向鐵道時間軸 (8天) -->
     <div class="rail-timeline">
       <div class="track">
         <div class="track-line"></div>
@@ -422,7 +405,6 @@
       </div>
     </div>
 
-    <!-- Stepper 按鈕列 -->
     <div class="stepper">
       <label for="day-1-radio" class="btn-step-label prev-d1">⬅️ 前一天</label>
       <label for="day-2-radio" class="btn-step-label prev-d2">⬅️ 前一天</label>
@@ -450,7 +432,7 @@
       <label for="day-8-radio" class="btn-step-label next-d8">後一天 ➡️</label>
     </div>
 
-    <!-- DAY 1 內容 -->
+    <!-- DAY 1 -->
     <div id="pane-d1" class="day-pane">
       <div class="banner">
         <div class="b-icon">🛫</div>
@@ -487,7 +469,7 @@
       </div>
     </div>
 
-    <!-- DAY 2 內容 -->
+    <!-- DAY 2 -->
     <div id="pane-d2" class="day-pane">
       <div class="banner">
         <div class="b-icon">🏮</div>
@@ -523,7 +505,7 @@
       </div>
     </div>
 
-    <!-- DAY 3 內容 -->
+    <!-- DAY 3 -->
     <div id="pane-d3" class="day-pane">
       <div class="banner">
         <div class="b-icon">⛲</div>
@@ -575,7 +557,7 @@
       </div>
     </div>
 
-    <!-- DAY 4 內容 -->
+    <!-- DAY 4 -->
     <div id="pane-d4" class="day-pane">
       <div class="banner">
         <div class="b-icon">📜</div>
@@ -611,7 +593,7 @@
       </div>
     </div>
 
-    <!-- DAY 5 內容 -->
+    <!-- DAY 5 -->
     <div id="pane-d5" class="day-pane">
       <div class="banner">
         <div class="b-icon">⛰️</div>
@@ -642,7 +624,7 @@
       </div>
     </div>
 
-    <!-- DAY 6 內容 -->
+    <!-- DAY 6 -->
     <div id="pane-d6" class="day-pane">
       <div class="banner">
         <div class="b-icon">🏙️</div>
@@ -678,7 +660,7 @@
       </div>
     </div>
 
-    <!-- DAY 7 內容 -->
+    <!-- DAY 7 -->
     <div id="pane-d7" class="day-pane">
       <div class="banner">
         <div class="b-icon">🦀</div>
@@ -722,7 +704,7 @@
       </div>
     </div>
 
-    <!-- DAY 8 內容 -->
+    <!-- DAY 8 -->
     <div id="pane-d8" class="day-pane">
       <div class="banner">
         <div class="b-icon">🏡</div>
@@ -751,7 +733,7 @@
     </div>
   </div>
 
-  <!-- ==================== 4. 泰山攻略分頁 ==================== -->
+  <!-- 4. 泰山攻略分頁 -->
   <div id="sec-taishan" class="main-sec">
     <div class="card" style="border-left: 6px solid var(--calcifer);">
       <h3>⛰️ 五嶽之首【泰山】雙登山路線比較 (出發前10天確認)</h3>
@@ -786,7 +768,7 @@
     </div>
   </div>
 
-  <!-- ==================== 5. 美饌與匯率分頁 ==================== -->
+  <!-- 5. 美饌與匯率分頁 -->
   <div id="sec-menu" class="main-sec">
     <div class="card" style="border-left: 6px solid var(--calcifer);">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
@@ -843,35 +825,137 @@
     </div>
   </div>
 
-  <!-- ==================== 6. 住宿飯店分頁 ==================== -->
-  <div id="sec-hotel" class="main-sec">
+  <!-- 6. 住宿飯店分頁 -->
+  <div id="sec-hotels" class="main-sec">
     <div class="card" style="border-left: 6px solid #6b21a8;">
-      <h3>🏨 全程七晚精選酒店聯絡資訊</h3>
-      <p style="margin-bottom:12px; font-size:0.85rem; color:var(--muted);">飯店大都有提供電熱水壺（自來水不可生飲）、沐浴洗髮備品與毛巾，<strong>牙膏、牙刷及刮鬍刀請務必自備</strong>：</p>
-      
-      <div class="tip-box tip-blue" style="margin-bottom:10px;">
-        <strong>📍 11/06 (1晚) ｜ 青島香格里拉酒店</strong><br>
-        • 聯絡電話：<a href="tel:+8653283883838" style="font-weight:800; color:#1e4562;">+86-532-83883838</a>
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:6px;">
+        <h3 style="margin-bottom:0;">🏨 全程七晚精選酒店總覽 (4 間特色星級飯店)</h3>
+        <span style="font-size:0.78rem; font-weight:800; background:#f3e8ff; color:#6b21a8; padding:2px 8px; border-radius:6px; border:1px solid var(--border);">2人一室・含飯店內早餐</span>
+      </div>
+      <p style="margin-bottom:14px; font-size:0.86rem; color:var(--muted);">
+        本次考察行程精選青島、濟南、泰安四間優質星級酒店（後三站皆安排<strong>連住 2 晚</strong>，免去天天打包搬運行李的辛勞）：
+      </p>
+
+      <!-- 飯店總表 -->
+      <div style="overflow-x:auto; margin-bottom:16px;">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>入住日期</th>
+              <th>晚數</th>
+              <th>城市</th>
+              <th>飯店名稱</th>
+              <th>聯絡電話</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>11/06 (五)</strong><br><span style="font-size:0.75rem; color:var(--muted);">Day 1</span></td>
+              <td>1 晚</td>
+              <td>青島</td>
+              <td><strong>青島香格里拉酒店</strong></td>
+              <td><a href="tel:+8653283883838" style="color:var(--sky); font-weight:800; text-decoration:none;">+86-532-83883838</a></td>
+            </tr>
+            <tr>
+              <td><strong>11/07 - 11/08</strong><br><span style="font-size:0.75rem; color:var(--muted);">Day 2 ~ Day 3</span></td>
+              <td><strong>連住 2 晚</strong></td>
+              <td>濟南</td>
+              <td><strong>濟南潤華皇冠酒店</strong></td>
+              <td><a href="tel:+8653188119999" style="color:var(--sky); font-weight:800; text-decoration:none;">+86-531-88119999</a></td>
+            </tr>
+            <tr>
+              <td><strong>11/09 - 11/10</strong><br><span style="font-size:0.75rem; color:var(--muted);">Day 4 ~ Day 5</span></td>
+              <td><strong>連住 2 晚</strong></td>
+              <td>泰安</td>
+              <td><strong>泰安建國璞隱酒店</strong></td>
+              <td><a href="tel:+865386683333" style="color:var(--sky); font-weight:800; text-decoration:none;">+86-538-6683333</a></td>
+            </tr>
+            <tr>
+              <td><strong>11/11 - 11/12</strong><br><span style="font-size:0.75rem; color:var(--muted);">Day 6 ~ Day 7</span></td>
+              <td><strong>連住 2 晚</strong></td>
+              <td>青島</td>
+              <td><strong>青島金茂萬麗酒店</strong></td>
+              <td><a href="tel:+8653255959999" style="color:var(--sky); font-weight:800; text-decoration:none;">+86-532-55959999</a></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <div class="tip-box tip-gold" style="margin-bottom:10px;">
-        <strong>📍 11/07 - 11/08 (連住2晚) ｜ 濟南潤華皇冠酒店</strong><br>
-        • 聯絡電話：<a href="tel:+8653188119999" style="font-weight:800; color:#724c08;">+86-531-88119999</a>
+      <!-- 逐間飯店詳細卡片 -->
+      <div class="route-box" style="margin-bottom:12px; border-left: 5px solid var(--sky);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+          <h4 style="color:#1e4562; margin-bottom:0;">1️⃣ Day 1 (11/06 週五・住1晚) ｜ 青島香格里拉酒店</h4>
+          <span style="font-size:0.74rem; font-weight:800; background:var(--sky-bg); color:#225170; padding:2px 8px; border-radius:999px; border:1px solid var(--border);">Shangri-La Qingdao</span>
+        </div>
+        <p style="font-size:0.85rem; margin-top:6px;">
+          • <strong>聯絡電話：</strong><a href="tel:+8653283883838" style="font-weight:800; color:#1e4562;">+86-532-83883838</a><br>
+          • <strong>參考地址：</strong>山東省青島市市南區香港中路 9 號（毗鄰五四廣場與萬象城核心商圈）<br>
+          • <strong>住宿亮點：</strong>國際知名五星奢華酒店，首晚抵達青島即可享受高品質休憩環境與貼心輕食消夜，次日早上於飯店內享用豐盛自助早餐。
+        </p>
+        <div style="margin-top:8px;">
+          <a href="https://www.google.com/maps/search/?api=1&query=Shangri-La+Qingdao+9+Xianggang+Middle+Road" target="_blank" style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; font-size:0.78rem; font-weight:800; text-decoration:none; color:var(--text); background:#f1ebd9; border:1.5px solid var(--border); box-shadow:1px 1px 0px var(--border);">📍 Google Maps 位置檢視</a>
+        </div>
       </div>
 
-      <div class="tip-box tip-green" style="margin-bottom:10px;">
-        <strong>📍 11/09 - 11/10 (連住2晚) ｜ 泰安建國璞隱酒店</strong><br>
-        • 聯絡電話：<a href="tel:+865386683333" style="font-weight:800; color:#1c4826;">+86-538-6683333</a>
+      <div class="route-box" style="margin-bottom:12px; border-left: 5px solid var(--hay);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+          <h4 style="color:#724c08; margin-bottom:0;">2️⃣ Day 2 - Day 3 (11/07 - 11/08・連住2晚) ｜ 濟南潤華皇冠酒店</h4>
+          <span style="font-size:0.74rem; font-weight:800; background:var(--hay-bg); color:#875c12; padding:2px 8px; border-radius:999px; border:1px solid var(--border);">泉城濟南・連住免搬家</span>
+        </div>
+        <p style="font-size:0.85rem; margin-top:6px;">
+          • <strong>聯絡電話：</strong><a href="tel:+8653188119999" style="font-weight:800; color:#724c08;">+86-531-88119999</a><br>
+          • <strong>參考地址：</strong>山東省濟南市槐蔭區經十路 28666 號<br>
+          • <strong>住宿亮點：</strong>連住兩晚便利探索章丘明水古城、黃河千畝銀杏林、山東博物館、天下第一泉趵突泉與大明湖，次日無需收拾大行李即可輕鬆出遊。
+        </p>
+        <div style="margin-top:8px;">
+          <a href="https://www.google.com/maps/search/?api=1&query=Jinan+Runhua+Crown+Hotel+28666+Jingshi+Road" target="_blank" style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; font-size:0.78rem; font-weight:800; text-decoration:none; color:var(--text); background:#f1ebd9; border:1.5px solid var(--border); box-shadow:1px 1px 0px var(--border);">📍 Google Maps 位置檢視</a>
+        </div>
       </div>
 
-      <div class="tip-box tip-red">
-        <strong>📍 11/11 - 11/12 (連住2晚) ｜ 青島金茂萬麗酒店</strong><br>
-        • 聯絡電話：<a href="tel:+8653255959999" style="font-weight:800; color:#8f2314;">+86-532-55959999</a>
+      <div class="route-box" style="margin-bottom:12px; border-left: 5px solid var(--forest);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+          <h4 style="color:#1c4826; margin-bottom:0;">3️⃣ Day 4 - Day 5 (11/09 - 11/10・連住2晚) ｜ 泰安建國璞隱酒店</h4>
+          <span style="font-size:0.74rem; font-weight:800; background:var(--forest-bg); color:#235232; padding:2px 8px; border-radius:999px; border:1px solid var(--border);">泰山腳下・東方美學</span>
+        </div>
+        <p style="font-size:0.85rem; margin-top:6px;">
+          • <strong>聯絡電話：</strong><a href="tel:+865386683333" style="font-weight:800; color:#1c4826;">+86-538-6683333</a><br>
+          • <strong>參考地址：</strong>山東省泰安市泰山區東嶽大街 199 號（鄰近泰安岱廟與泰山景區）<br>
+          • <strong>住宿亮點：</strong>主打新中式隱逸禪意風格，連住兩晚專為登頂五嶽之首【泰山】打造最佳休憩基地，Day 5 登泰山只需輕裝隨身背包出發！
+        </p>
+        <div style="margin-top:8px;">
+          <a href="https://www.google.com/maps/search/?api=1&query=Taian+Jianguo+Puyin+Hotel+Dongyue+Street" target="_blank" style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; font-size:0.78rem; font-weight:800; text-decoration:none; color:var(--text); background:#f1ebd9; border:1.5px solid var(--border); box-shadow:1px 1px 0px var(--border);">📍 Google Maps 位置檢視</a>
+        </div>
       </div>
+
+      <div class="route-box" style="border-left: 5px solid var(--calcifer);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+          <h4 style="color:#8f2314; margin-bottom:0;">4️⃣ Day 6 - Day 7 (11/11 - 11/12・連住2晚) ｜ 青島金茂萬麗酒店</h4>
+          <span style="font-size:0.74rem; font-weight:800; background:var(--calcifer-bg); color:#9c3319; padding:2px 8px; border-radius:999px; border:1px solid var(--border);">Renaissance Qingdao</span>
+        </div>
+        <p style="font-size:0.85rem; margin-top:6px;">
+          • <strong>聯絡電話：</strong><a href="tel:+8653255959999" style="font-weight:800; color:#8f2314;">+86-532-55959999</a><br>
+          • <strong>參考地址：</strong>山東省青島市高新區火炬路 57 號<br>
+          • <strong>住宿亮點：</strong>萬豪旗下國際品牌酒店，連住兩晚暢遊青島老城區 CITY WALK、前海棧橋、雲上海天、小魚山公園與八大關，從容打包戰利品返台。
+        </p>
+        <div style="margin-top:8px;">
+          <a href="https://www.google.com/maps/search/?api=1&query=Renaissance+Qingdao+Hotel+57+Huoju+Road" target="_blank" style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; font-size:0.78rem; font-weight:800; text-decoration:none; color:var(--text); background:#f1ebd9; border:1.5px solid var(--border); box-shadow:1px 1px 0px var(--border);">📍 Google Maps 位置檢視</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 飯店住宿貼心提醒卡 -->
+    <div class="card" style="border-left: 6px solid var(--sky);">
+      <h3>🛎️ 飯店住宿規範與貼心提醒</h3>
+      <p>
+        • <strong>個人盥洗備品：</strong>飯店大都有提供電熱水壺、沐浴乳、洗髮精與毛巾等，但響應環保，<strong>牙膏、牙刷及刮鬍刀請務必自備</strong>。<br>
+        • <strong>飲水與電器使用：</strong>房間內自來水<strong>不可生飲</strong>，請使用電熱水壺煮沸後飲用（電熱水壺僅供煮水，切勿放入茶葉、咖啡粉或泡麵）；大陸電壓為 <strong>220V</strong>（高級飯店通常設有 1~2 個 110V 插座），請避免使用多插頭延長線以免負荷過大。<br>
+        • <strong>房內消費與安全：</strong>房間吧台零食與冰箱內酒類、飲料皆需付費（退房時至櫃檯結帳）；進出房間請扣上安全鎖，貴重物品善用房內保險箱；<strong>嚴禁於房間內吸菸</strong>，違者罰鍰需自行負擔。<br>
+        • <strong>外出防迷路：</strong>個人自由活動外出時，務必向飯店櫃檯索取<strong>飯店名片</strong>，並熟記領隊（林昭伶 <code>0988-285482</code>）聯絡電話。
+      </p>
     </div>
   </div>
 
-  <!-- ==================== 7. 行李與出入境須知分頁 ==================== -->
+  <!-- 7. 行李與出入境須知分頁 -->
   <div id="sec-tips" class="main-sec">
     <div class="card" style="border-left: 6px solid var(--calcifer);">
       <h3>🧳 隨身手提行李規定 (1件 7公斤內)</h3>
